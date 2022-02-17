@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Unit tests
-        run: gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" | --batch google-services.json.asc > app/google-services.json | bash ./gradlew test --stacktrace
+        run: gpg -d --passphrase "$secrets.GOOGLE_SERVICES_PASSPHRASE" | --batch google-services.json.asc > app/google-services.json | bash ./gradlew test --stacktrace
 
   apk:
     name: Generate APK
