@@ -9,6 +9,14 @@ on:
 
 jobs:
 
+  assembleRelease:
+    name: restoreReleaseKeystore
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "${{ secrets.GOOGLE_SERVICES }}" > google-services.json.asc | gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" | --batch google-services.json.asc > app/google-services.json
+
+
   test:
     name: Run Unit Tests
     runs-on: ubuntu-latest
@@ -20,10 +28,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Unit tests
-        run: |
-
-        gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" --batch google-services.json.asc > app/google-services.json
-        bash ./gradlew test --stacktrace
+        run: bash ./gradlew test --stacktrace
 
   apk:
     name: Generate APK
@@ -36,9 +41,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build debug APK
-        run: |
-        gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" --batch google-services.json.asc > app/google-services.json
-        bash ./gradlew assembleDebug --stacktrace
+        run: bash ./gradlew assembleDebug --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v1
         with:
