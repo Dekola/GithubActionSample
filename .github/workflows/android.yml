@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" | --batch google-services.json.asc > app/google-services.json
-
+      - run: gpg -d --passphrase "$secrets.GOOGLE_SERVICES_PASSPHRASE" --batch app/google-services.json.asc > app/google-services.json
 
   test:
     name: Run Unit Tests
@@ -28,7 +27,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Unit tests
-        run: gpg -d --passphrase "$secrets.GOOGLE_SERVICES_PASSPHRASE" | --batch google-services.json.asc > app/google-services.json | bash ./gradlew test --stacktrace
+        run: gpg -d --passphrase "$secrets.GOOGLE_SERVICES_PASSPHRASE" --batch app/google-services.json.asc > app/google-services.json | bash ./gradlew test --stacktrace
 
   apk:
     name: Generate APK
@@ -41,7 +40,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build debug APK
-        run: gpg -d --passphrase "${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}" | --batch google-services.json.asc > app/google-services.json | bash ./gradlew assembleDebug --stacktrace
+        run: gpg -d --passphrase "$secrets.GOOGLE_SERVICES_PASSPHRASE" --batch app/google-services.json.asc > app/google-services.json | bash ./gradlew assembleDebug --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v1
         with:
